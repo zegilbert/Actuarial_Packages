@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Zacchaeus Gilbert">
+
+<title>Life Insurance Analytics</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Life_Insurance_Analytics_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Life_Insurance_Analytics_files/libs/quarto-html/quarto.js"></script>
+<script src="Life_Insurance_Analytics_files/libs/quarto-html/popper.min.js"></script>
+<script src="Life_Insurance_Analytics_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Life_Insurance_Analytics_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Life_Insurance_Analytics_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Life_Insurance_Analytics_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Life_Insurance_Analytics_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Life_Insurance_Analytics_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Life_Insurance_Analytics_files/libs/bootstrap/bootstrap-c0367b04c37547644fece4185067e4a7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Life Insurance Analytics</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Zacchaeus Gilbert </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Welcome to the first part of my “Actuarial Packages” project! Here, we are going to explore what R/R studio can do to help answer some questions related to “financial mathematics” and “life insurance”; it is exploring topics like these that helps someone work through one of many actuarial pathways. In this case, I will be helping to contribute ideas towards becoming an “Associate of the Society of Actuaries” (ASA) which is a part of the…</p>
+<p><img src="Pictures/SOA.png" class="img-fluid"></p>
+<p>Let’s start by loading several R packages…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lifecontingencies) <span class="co"># The main attraction :)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After loading these packages, let’s take a look at the <code>lifecontingencies</code> package and start by exploring “financial mathematics”…</p>
+</section>
+<section id="financial-mathematics" class="level2">
+<h2 class="anchored" data-anchor-id="financial-mathematics">Financial Mathematics</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment "lifecontingencies::" and use tab completion on it</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to explore data/functions. Use (CTRL/CMD + SHIFT + C) to do so...</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># lifecontingencies::</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Perhaps you may have noticed at the beginning of the list…</p>
+<p><img src="Pictures/annuity.png" class="img-fluid"></p>
+<p>…but what is an annuity? Let’s start with a definition for an annuity. An annuity is “A series of payments made at equal intervals of time-”; there are several examples of this type of payment: House mortgages or installment payments on large credit card purchases and automobile transactions. There are somethings to consider when finding the value of an annuity; let’s start from the left and work our way to the right. The “<span class="math inline">\(i\)</span>” is the effective interest rate applied to each payment made. The “<span class="math inline">\(n\)</span>” is the number of payments that are going to be made over time. The “<span class="math inline">\(m\)</span>” is the deferring period, which defaults to zero; the deferring period is the amount of periods that pass before the first and following payments. Without any deferring payments, <span class="math inline">\(m = 0\)</span>, which is why it is zero by default. Payments can occur in different time frames though. They can happen annually (yearly), biannually, quarterly, monthly, biweekly, weekly, or even daily; the “<span class="math inline">\(k\)</span>” term represents the number of payments within one year, so this will default to 1, but can be adjusted to be 2, 4, 12, 26, 52, and 365 (or 360 for “ordinary” counting) respectively. Finally, we have the “<code>type = 'immediate'</code>”; this means that the payment is made at the end of the payment period (as counter intuitive as that sounds). The <code>annuity</code> function will also default to “immediate”; if we did have payments at the beginning of each payment period, then we would want the <code>type</code> to be “due”.</p>
+<p>Here is what all of this looks like using actuarial notation…</p>
+<p><img src="Pictures/immediate_due.png" class="img-fluid"></p>
+<p>Notice how the “<span class="math inline">\(a\)</span>” has nothing above it to represent the “immediate” type and has two dots above it to represent “due”, but what is the “<span class="math inline">\(a\)</span>”? The “<span class="math inline">\(a\)</span>” is the last piece of the puzzle; this indicates the “present value” (<span class="math inline">\(PV\)</span>), which is the sum of all the cash flows when considered in our current time. Think of it like this, a payment at the end of the year is affected by one year’s worth of interest, yet a payment ten years later will have nine more year’s worth of accumulated interest that needs to be considered. When adjusting payments to represent their amount in our current time, here is what the present value looks like on a time line…</p>
+<p><img src="Pictures/timeline.png" class="img-fluid"></p>
+<p>And down below, I have the geometric series version and the geometric formula of the present value represented as well…</p>
+<p><img src="Pictures/formulas.png" class="img-fluid"></p>
+<p>Now let’s solve a financial math problem using both the geometric series and R studio. This question is one of the homework questions that I received during Winter 2025 in ACS 4550.</p>
+<p><img src="Pictures/Financial_Math_Question.png" class="img-fluid"></p>
+<p>Okay, here are the components of this question…</p>
+<p><img src="Pictures/components.png" class="img-fluid"></p>
+<p>And here is the exact solution I produced a year and a half ago…</p>
+<p><img src="Pictures/Financial_Math_Answer.png" class="img-fluid"></p>
+<p>A couple things to note here, anytime there is anything that is consistent with the timing and payment periods, we do not need to acknowledge them through the work shown; this is why I do not have “<span class="math inline">\((1)\)</span>” as the k term nor do I have “<span class="math inline">\(0 |\)</span>”. This will also be true when utilizing R studio. Now, let’s answer the question using R studio…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">annuity</span>(<span class="at">i =</span> <span class="fl">0.08</span>, <span class="at">n =</span> <span class="dv">20</span>, <span class="at">type =</span> <span class="st">"immediate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9.818147</code></pre>
+</div>
+</div>
+<p>…wait, that’s not right, and where do we put <span class="math inline">\(P = 300\)</span>? The <code>annuity</code> function actually behaves just like our actuarial notation above, so we currently only have…</p>
+<p><img src="Pictures/incomplete.png" class="img-fluid"></p>
+<p>So just like the work that I show above, all we need to do is multiply the <code>annuity</code> function by three hundred to get the correct answer…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dv">300</span> <span class="sc">*</span> <span class="fu">annuity</span>(<span class="at">i =</span> <span class="fl">0.08</span>, <span class="at">n =</span> <span class="dv">20</span>, <span class="at">k =</span> <span class="dv">1</span>, <span class="at">type =</span> <span class="st">"immediate"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2945.444</code></pre>
+</div>
+</div>
+<p>Tada! Before moving on, let’s interpret this. What we are saying is, should we carry on with all of our cash flows, the total amount of money that we will be spending in today’s money is about $2,945.44. There is an opposite of this calculation called the “future value”, but that is another topic for another time. For now, this wraps up our first look at “financial mathematics”. Now we will get into some “fundamentals of actuarial mathematics”.</p>
+</section>
+<section id="fundamentals-of-actuarial-mathematics" class="level2">
+<h2 class="anchored" data-anchor-id="fundamentals-of-actuarial-mathematics">Fundamentals of Actuarial Mathematics</h2>
+<p>Several ideas from “financial mathematics” are further augmented to represent insurance and in this case, we will take a quick look into a life insurance topic. We are going to be looking into “life tables”. There is going to be a lot more involvement with R studio to configure and infer information from what’s provided. Notice that when using tab completion on <code>lifecontingencies::</code>, there are several data tables that read “demo-” followed by a country…</p>
+<p><img src="Pictures/data.png" class="img-fluid"></p>
+<p>We are going to be working with “demoUsa” and “demoJapan”, but first, let’s look at the “Standard Ultimate Life Table” (SULT) below; “Ultimate” is a word used to describe the “total projection” of each record respectively. This table is created by using approximate trends to help infer information about the following record respectively; understanding this will be important for interpreting the table further.</p>
+<p><img src="Pictures/SULT.png" class="img-fluid"> <img src="Pictures/SULT2.png" class="img-fluid"></p>
+<p>Beyond <span class="math inline">\(q_x\)</span> is actuarial notation that represents different forms of insurance; we won’t be talking about those, but we will focus on these ones…</p>
+<p><img src="Pictures/life_death_rate.png" class="img-fluid"></p>
+<p>The “<span class="math inline">\(l_x\)</span>” represents the quantity of individuals that are currently alive at the age of “<span class="math inline">\(x\)</span>”. The “<span class="math inline">\(d_x\)</span>” represents the quantity of individuals that die during the age of <span class="math inline">\(x\)</span>; this is not actually a part of the original SULT, but it tends to be inferred for learning and working with life tables, so we will do the same today. The “<span class="math inline">\(q_x\)</span>” is the probability of an individual dying during their <span class="math inline">\(x\)</span> age; this can be derived if we take the <span class="math inline">\(d_x\)</span> and divide it by <span class="math inline">\(l_x\)</span> giving us…</p>
+<p><span class="math display">\[q_x = \frac{d_x}{l_x}\]</span>Notice that there is not a “<span class="math inline">\(t\)</span>” in front of the <span class="math inline">\(q_x\)</span> expression; this is because if we are only addressing the ratio per year, then we do not include a number in front of it. We would include a <span class="math inline">\(t\)</span> value in front of <span class="math inline">\(q_x\)</span> if we are considering the probability of death after two or more years. But, why are we looking into life and death anyways? This is because when companies are providing monetary support to the insured, there is a proposed risk of the company needing to provide support at different times; because this cannot truly be known, companies need to consider the risk of death to continuously provide life insurance to the insured.</p>
+<p>With the background needed to work with the <code>lifecontingencies</code> life tables, let’s look at <code>demoUsa</code> and <code>demoJapan</code>…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(demoUsa); <span class="fu">tail</span>(demoUsa)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  age USSS2007M USSS2007F USSS2000M USSS2000F USSS1990M USSS1990F
+1   0    100000    100000    100000    100000    100000    100000
+2   1     99262     99390     99241     99377     98972     99185
+3   2     99213     99347     99187     99332     98896     99120
+4   3     99182     99322     99150     99302     98844     99083
+5   4     99158     99303     99122     99283     98804     99053
+6   5     99138     99288     99100     99264     98771     99028</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    age USSS2007M USSS2007F USSS2000M USSS2000F USSS1990M USSS1990F
+109 108         8        48         4        26         7        57
+110 109         4        24         2        12         3        30
+111 110         2        11         1         5         2        15
+112 111         1         5        NA         2         1         7
+113 112        NA         2        NA         1        NA         3
+114 113        NA         1        NA        NA        NA         1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(demoJapan); <span class="fu">tail</span>(demoJapan)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  age JP8587M JP8587F
+1   0 0.00137 0.00126
+2   1 0.00098 0.00094
+3   2 0.00067 0.00065
+4   3 0.00048 0.00044
+5   4 0.00039 0.00030
+6   5 0.00036 0.00023</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    age JP8587M JP8587F
+105 104 0.73885 0.58423
+106 105 1.00000 0.63195
+107 106      NA 0.67817
+108 107      NA 0.72297
+109 108      NA 0.76652
+110 109      NA 1.00000</code></pre>
+</div>
+</div>
+<p>Right away, we can tell a few things…</p>
+<ol type="1">
+<li>Both tables consider gender while the SULT does not; we are going to take advantage of this for analysis.</li>
+<li><code>demoUsa</code> has information on many years while <code>demoJapan</code> only features information from between 1985-1987 within one column. For comparing both countries later, we will limit the data within <code>demoUsa</code> to just the information from 1990 for a more “apples-to-apples” comparison with <code>demoJapan</code>.</li>
+<li>The headers make sense, but they are not consistent with each other nor do they utilize the actuarial notation that we just learned; I will change the column names to better reflect this.</li>
+<li>Both datasets gives us information about one country that the other does not; <code>demoUsa</code> gives us the <span class="math inline">\(l_x\)</span> for males and females while <code>demoJapan</code> gives us the <span class="math inline">\(q_x\)</span> for males and females. This will be a great learning opportunity to derive what’s missing from each country.</li>
+<li>At the end of each dataset, there are NAs; this is because within the sample, everyone has died by each later age respectively. Not only that, but the <span class="math inline">\(q_x\)</span> appears to be equivalent to one in the later ages too; this is because when the remaining individual(s) die, we have a ratio that equates to one. For example, assume that <span class="math inline">\(l_{100} = 2\)</span> if those individuals die before the age of 101, then <span class="math inline">\(d_{100} = 2\)</span> as well, meaning <span class="math inline">\(q_{100}\)</span> would be as follows… <span class="math display">\[q_{100} = \frac{d_{100}}{l_{100}} = \frac{2}{2} = 1.\]</span>This reveals something interesting. Not only is <span class="math inline">\(q_x\)</span> a probability, it follows a “cumulative distribution function” (cdf), meaning the probability of death will always range between 0 and 1.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Both newly created datasets represents males/females, thereby addressing "1"</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>USA <span class="ot">&lt;-</span> demoUsa <span class="sc">%&gt;%</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(age, USSS1990M<span class="sc">:</span>USSS1990F) <span class="co"># Addressing "2"</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(USA) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"lxMaleUSA"</span>, <span class="st">"lxFemaleUSA"</span>) <span class="co"># Addressing "3"</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>JPN <span class="ot">&lt;-</span> demoJapan</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(JPN) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"qxMaleJPN"</span>, <span class="st">"qxFemaleJPN"</span>) <span class="co"># Addressing "3"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now let’s take a look at both newly created datasets…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(USA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  x lxMaleUSA lxFemaleUSA
+1 0    100000      100000
+2 1     98972       99185
+3 2     98896       99120
+4 3     98844       99083
+5 4     98804       99053
+6 5     98771       99028</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(JPN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  x qxMaleJPN qxFemaleJPN
+1 0   0.00137     0.00126
+2 1   0.00098     0.00094
+3 2   0.00067     0.00065
+4 3   0.00048     0.00044
+5 4   0.00039     0.00030
+6 5   0.00036     0.00023</code></pre>
+</div>
+</div>
+<p>Now these look more consistent with the SULT. Working with <code>USA</code> first, let’s get the <span class="math inline">\(d_x\)</span> values for both males and females. But, how do we do that? Looking back at the SULT, we can see that for every increase in the age within the table, the amount of people within the next <span class="math inline">\(l_x\)</span> decreases. When comparing between a “current” age and the “next” age, we can express the “next” age as “<span class="math inline">\(l_{x+1}\)</span>”; this is key to derive another way to express <span class="math inline">\(d_x\)</span>…</p>
+<p><span class="math display">\[d_x = l_x - l_{x+1}\]</span>Meaning, if we subtract the quantity of people of the next age from the quantity of people of the current age, we will get <span class="math inline">\(d_x\)</span>. If we keep doing this for every age within the table, we can find <span class="math inline">\(d_x\)</span> for every age in the data for both genders, so let’s do that. I will explain the reasoning for the code in steps…</p>
+<ol type="1">
+<li>The later <span class="math inline">\(l_x\)</span> values consist of NAs; these need to be replaced with zeros as this acknowledges that no one from that respective category is alive anymore.</li>
+<li>From the left, I need to create a new column called <code>dxMaleUSA</code> within <code>USA</code>. To replicate the formula directly above, I need R to lag the data by one so then I can subtract the current information from the information prior; so, as a twist from the equation above, R is doing this <span class="math inline">\(d_x = l_{x-1} - l_x\)</span> instead, but will still consist of the same results.</li>
+<li>So far, every result from doing the math above works, but every value will be put in the row below the correct place, meaning every <span class="math inline">\(d_x\)</span> will be placed at <span class="math inline">\(d_{x+1}\)</span>; this code will address the issue by shifting each result up by one.</li>
+<li>As noted earlier, the NAs mean that nobody is alive at “those” ages respectively, so anywhere that tried to do <span class="math inline">\(NA_{x-1} - NA_x\)</span> will just be 0. So let’s change every NA with a zero.</li>
+</ol>
+<p>All of these steps are replicated for females respectively. With all that being said, let’s run the code and see what it looks like…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>lxMaleUSA[<span class="fu">is.na</span>(USA<span class="sc">$</span>lxMaleUSA)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>dxMaleUSA <span class="ot">&lt;-</span> (<span class="fu">lag</span>(USA<span class="sc">$</span>lxMaleUSA, <span class="dv">1</span>) <span class="sc">-</span> USA<span class="sc">$</span>lxMaleUSA)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>dxMaleUSA <span class="ot">&lt;-</span> <span class="fu">c</span>(USA<span class="sc">$</span>dxMaleUSA[<span class="sc">-</span><span class="dv">1</span>], <span class="cn">NA</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>dxMaleUSA[<span class="fu">is.na</span>(USA<span class="sc">$</span>dxMaleUSA)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>lxFemaleUSA[<span class="fu">is.na</span>(USA<span class="sc">$</span>lxFemaleUSA)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>dxFemaleUSA <span class="ot">&lt;-</span> (<span class="fu">lag</span>(USA<span class="sc">$</span>lxFemaleUSA, <span class="dv">1</span>) <span class="sc">-</span> USA<span class="sc">$</span>lxFemaleUSA)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>dxFemaleUSA <span class="ot">&lt;-</span> <span class="fu">c</span>(USA<span class="sc">$</span>dxFemaleUSA[<span class="sc">-</span><span class="dv">1</span>], <span class="cn">NA</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>dxFemaleUSA[<span class="fu">is.na</span>(USA<span class="sc">$</span>dxFemaleUSA)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(USA); <span class="fu">tail</span>(USA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  x lxMaleUSA lxFemaleUSA dxMaleUSA dxFemaleUSA
+1 0    100000      100000      1028         815
+2 1     98972       99185        76          65
+3 2     98896       99120        52          37
+4 3     98844       99083        40          30
+5 4     98804       99053        33          25
+6 5     98771       99028        29          21</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      x lxMaleUSA lxFemaleUSA dxMaleUSA dxFemaleUSA
+109 108         7          57         4          27
+110 109         3          30         1          15
+111 110         2          15         1           8
+112 111         1           7         1           4
+113 112         0           3         0           2
+114 113         0           1         0           0</code></pre>
+</div>
+</div>
+<p>Nice, looks like it checks out! Notice how for males and females, <span class="math inline">\(l_0 = 100000\)</span>. Then we recognize that <span class="math inline">\(d_0 = 1028\)</span> for males and <span class="math inline">\(d_0 = 815\)</span> for females, which gives us <span class="math inline">\(l_1 = 98972\)</span> for males and <span class="math inline">\(l_1 = 99185\)</span> for females; it is this that helps demonstrate that…</p>
+<p><span class="math display">\[l_x - d_x = l_{x+1}\]</span>as well. Now it is time to tackle <span class="math inline">\(q_x\)</span> since we know that every <span class="math inline">\(l_x\)</span> and <span class="math inline">\(d_x\)</span> is in order. Once again, I will explain the code in steps…</p>
+<ol type="1">
+<li>From the left, I need to create a new column called <code>qxMaleUSA</code> within <code>USA</code>. Knowing that <span class="math inline">\(q_x = \frac{d_x}{l_x}\)</span>, all we need to do is input the result for each age respectively.</li>
+<li>Now I am saying, “For any value in <code>qxMaleUSA</code> that is not NA, I want each respective value rounded to the fifth digit of the decimal”; I do this because the <span class="math inline">\(q_x\)</span> values in <code>JPN</code> are all approximate to the fifth digit as well, so it’s more comparable this way.</li>
+<li>Like before, I do not want there to be mathematical operations being done with NAs; in this case, I don’t want <span class="math inline">\(\frac{NA}{NA}\)</span>, especially because if we assume that each NA is zero, then we would have <span class="math inline">\(\frac{0}{0}\)</span>, which is indeterminate. There should not be any NAs anyways, but just in case, where there are NAs in <code>qxMaleUSA</code>, we will replace with zeros.</li>
+</ol>
+<p>And like before, all of these steps apply for females as well. Now let’s see what happens…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>qxMaleUSA <span class="ot">&lt;-</span> USA<span class="sc">$</span>dxMaleUSA <span class="sc">/</span> USA<span class="sc">$</span>lxMaleUSA</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>qxMaleUSA[<span class="sc">!</span><span class="fu">is.na</span>(USA<span class="sc">$</span>qxMaleUSA)] <span class="ot">&lt;-</span> <span class="fu">round</span>(USA<span class="sc">$</span>qxMaleUSA, <span class="at">digits =</span> <span class="dv">5</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>qxMaleUSA[<span class="fu">is.na</span>(USA<span class="sc">$</span>qxMaleUSA)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>qxFemaleUSA <span class="ot">&lt;-</span> USA<span class="sc">$</span>dxFemaleUSA <span class="sc">/</span> USA<span class="sc">$</span>lxFemaleUSA</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>qxFemaleUSA[<span class="sc">!</span><span class="fu">is.na</span>(USA<span class="sc">$</span>qxFemaleUSA)] <span class="ot">&lt;-</span> <span class="fu">round</span>(USA<span class="sc">$</span>qxFemaleUSA, <span class="at">digits =</span> <span class="dv">5</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>USA<span class="sc">$</span>qxFemaleUSA[<span class="fu">is.na</span>(USA<span class="sc">$</span>qxFemaleUSA)] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(USA); <span class="fu">tail</span>(USA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  x lxMaleUSA lxFemaleUSA dxMaleUSA dxFemaleUSA qxMaleUSA qxFemaleUSA
+1 0    100000      100000      1028         815   0.01028     0.00815
+2 1     98972       99185        76          65   0.00077     0.00066
+3 2     98896       99120        52          37   0.00053     0.00037
+4 3     98844       99083        40          30   0.00040     0.00030
+5 4     98804       99053        33          25   0.00033     0.00025
+6 5     98771       99028        29          21   0.00029     0.00021</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      x lxMaleUSA lxFemaleUSA dxMaleUSA dxFemaleUSA qxMaleUSA qxFemaleUSA
+109 108         7          57         4          27   0.57143     0.47368
+110 109         3          30         1          15   0.33333     0.50000
+111 110         2          15         1           8   0.50000     0.53333
+112 111         1           7         1           4   1.00000     0.57143
+113 112         0           3         0           2   0.00000     0.66667
+114 113         0           1         0           0   0.00000     0.00000</code></pre>
+</div>
+</div>
+<p>Awesome! On the tail end of the dataset, you can see that for females, <span class="math inline">\(q_{113} = 0.000000\)</span>, which does not seem intuitive reaching such an old age, but that is just because that individual did not die while they reached their 114th birthday. Most likely, that individual died after the data was done being recorded. Otherwise, we can see the cdf with <span class="math inline">\(q_x\)</span>, which is great!</p>
+<p>Now for comparison with <code>JPN</code> later, I will rearrange the columns so that it follows <code>x</code>, <code>lxMaleUSA</code>, <code>dxMaleUSA</code>, <code>qxMaleUSA</code>, <code>lxFemaleUSA</code>, <code>dxFemaleUSA</code>, <code>qxFemaleUSA</code> and I will limit the rows so that we only see the information up to the age of 100…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>USA <span class="ot">&lt;-</span> USA[(<span class="dv">1</span><span class="sc">:</span><span class="dv">101</span>), <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">6</span>, <span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">7</span>)]</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(USA); <span class="fu">tail</span>(USA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  x lxMaleUSA dxMaleUSA qxMaleUSA lxFemaleUSA dxFemaleUSA qxFemaleUSA
+1 0    100000      1028   0.01028      100000         815     0.00815
+2 1     98972        76   0.00077       99185          65     0.00066
+3 2     98896        52   0.00053       99120          37     0.00037
+4 3     98844        40   0.00040       99083          30     0.00030
+5 4     98804        33   0.00033       99053          25     0.00025
+6 5     98771        29   0.00029       99028          21     0.00021</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      x lxMaleUSA dxMaleUSA qxMaleUSA lxFemaleUSA dxFemaleUSA qxFemaleUSA
+96   95      2874       758   0.26374        9627        2067     0.21471
+97   96      2116       594   0.28072        7560        1752     0.23175
+98   97      1522       452   0.29698        5808        1444     0.24862
+99   98      1070       335   0.31308        4364        1157     0.26512
+100  99       735       241   0.32789        3207         901     0.28095
+101 100       494       171   0.34615        2306         687     0.29792</code></pre>
+</div>
+</div>
+<p>Perfect! Now let’s start working with <code>JPN</code> and modify the life table. First, let’s reminds ourselves of what we’re working with…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(JPN); <span class="fu">tail</span>(JPN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  x qxMaleJPN qxFemaleJPN
+1 0   0.00137     0.00126
+2 1   0.00098     0.00094
+3 2   0.00067     0.00065
+4 3   0.00048     0.00044
+5 4   0.00039     0.00030
+6 5   0.00036     0.00023</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      x qxMaleJPN qxFemaleJPN
+105 104   0.73885     0.58423
+106 105   1.00000     0.63195
+107 106        NA     0.67817
+108 107        NA     0.72297
+109 108        NA     0.76652
+110 109        NA     1.00000</code></pre>
+</div>
+</div>
+<p>In this case, we are actually going to be working backwards; instead of utilizing <span class="math inline">\(l_x\)</span> to get <span class="math inline">\(d_x\)</span> and then <span class="math inline">\(q_x\)</span>, we are going to utilize <span class="math inline">\(q_x\)</span> to get <span class="math inline">\(l_x\)</span> and then <span class="math inline">\(d_x\)</span>. Let’s look at one particular relationship between the three of these again…</p>
+<p><span class="math display">\[q_x = \frac{d_x}{l_x}.\]</span>Now, if we actually multiply both sides by <span class="math inline">\(l_x\)</span>, we get…</p>
+<p><span class="math display">\[l_xq_x = d_x.\]</span> How can we work with this though? I am going to make a bold assumption; just like how <span class="math inline">\(l_0 = 100000\)</span> for both males and females in the United States life table, I am going to assume the same thing for males and females in Japan; this way, we can derive a value for <span class="math inline">\(d_0\)</span>. Now let’s get the value of <span class="math inline">\(d_0\)</span> for males…</p>
+<p><span class="math display">\[l_0q_0 = 100000 \times 0.01028 = 1028 = d_0.\]</span>Remember, knowing that <span class="math inline">\(d_x = l_x - l_{x+1}\)</span>, we can add <span class="math inline">\(l_{x+1}\)</span> to both sides and subtract <span class="math inline">\(d_x\)</span> from both sides, resulting in…</p>
+<p><span class="math display">\[l_{x+1} = l_x - d_x.\]</span>Knowing this, let’s plug in everything to get <span class="math inline">\(l_1\)</span> for males…</p>
+<p><span class="math display">\[l_1 = l_0 - d_0 = 100000 - 1028 = 98972\]</span></p>
+<p>Great! Now, this is what we need to do for every <span class="math inline">\(l_x\)</span> value; working with R, we will do this…</p>
+<ol type="1">
+<li>I wanted to set the value of <span class="math inline">\(l_x = 100000\)</span> just as a start for both Males and Females.</li>
+<li>It is this step and every line afterwards that utilizes a “for loop” reminiscent of the lesson within <a href="https://intro2r.com/loops.html">intro2r</a>. Let’s start at the first line of the loop; I recognize that I already set the data between rows 1:101, however, what I need this to operate on is between rows 1:100 because I will not have the 101st row represented to plug values into this later, so for every row between 1:100…</li>
+<li>I am creating the column inside of <code>JPN</code> called <code>dxMaleJPN</code> through the action of <span class="math inline">\(l_x \times q_x\)</span> from before; notice I want this value to be rounded so it’s consistent with the <code>USA</code> life table.</li>
+<li>Then I am performing <span class="math inline">\(l_x - d_x\)</span> and putting the result into the next <span class="math inline">\(l_x\)</span>, so into <span class="math inline">\(l_{x+1}\)</span>; notice how this automatically replaces every 100000 except for the one in <span class="math inline">\(l_0\)</span>, which is perfect!</li>
+</ol>
+<p>Just like before, this loop can be repeated for females respectively, and then…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>JPN<span class="sc">$</span>lxMaleJPN <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  JPN<span class="sc">$</span>dxMaleJPN[i] <span class="ot">&lt;-</span> <span class="fu">round</span>(JPN<span class="sc">$</span>lxMaleJPN[i] <span class="sc">*</span> JPN<span class="sc">$</span>qxMaleJPN[i], <span class="at">digits =</span> <span class="dv">0</span>)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  JPN<span class="sc">$</span>lxMaleJPN[i <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> JPN<span class="sc">$</span>lxMaleJPN[i] <span class="sc">-</span> JPN<span class="sc">$</span>dxMaleJPN[i]</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>JPN<span class="sc">$</span>lxFemaleJPN <span class="ot">&lt;-</span> <span class="dv">100000</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>) {</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  JPN<span class="sc">$</span>dxFemaleJPN[i] <span class="ot">&lt;-</span> <span class="fu">round</span>(JPN<span class="sc">$</span>lxFemaleJPN[i] <span class="sc">*</span> JPN<span class="sc">$</span>qxFemaleJPN[i], <span class="at">digits =</span> <span class="dv">0</span>)</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  JPN<span class="sc">$</span>lxFemaleJPN[i <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> JPN<span class="sc">$</span>lxFemaleJPN[i] <span class="sc">-</span> JPN<span class="sc">$</span>dxFemaleJPN[i]</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(JPN); <span class="fu">tail</span>(JPN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  x qxMaleJPN qxFemaleJPN lxMaleJPN dxMaleJPN lxFemaleJPN dxFemaleJPN
+1 0   0.00137     0.00126    100000       137      100000         126
+2 1   0.00098     0.00094     99863        98       99874          94
+3 2   0.00067     0.00065     99765        67       99780          65
+4 3   0.00048     0.00044     99698        48       99715          44
+5 4   0.00039     0.00030     99650        39       99671          30
+6 5   0.00036     0.00023     99611        36       99641          23</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      x qxMaleJPN qxFemaleJPN lxMaleJPN dxMaleJPN lxFemaleJPN dxFemaleJPN
+105 104   0.73885     0.58423     1e+05       137       1e+05         126
+106 105   1.00000     0.63195     1e+05       137       1e+05         126
+107 106        NA     0.67817     1e+05       137       1e+05         126
+108 107        NA     0.72297     1e+05       137       1e+05         126
+109 108        NA     0.76652     1e+05       137       1e+05         126
+110 109        NA     1.00000     1e+05       137       1e+05         126</code></pre>
+</div>
+</div>
+<p>…eh. It looks kind of weird at the end of the loop, but remember, I did only set this loop between 1:100, so there is more data than I told the loop to operate on. An “i” value was also created from both loops, which can easily be removed with <code>rm()</code>. Let’s remove the i, remove the extra rows in <code>JPN</code>, and even rearrange the columns to match the order of the <code>USA</code> data…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(i)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>JPN <span class="ot">&lt;-</span> JPN[(<span class="dv">1</span><span class="sc">:</span><span class="dv">101</span>), <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">3</span>)]</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(JPN); <span class="fu">tail</span>(JPN)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  x lxMaleJPN dxMaleJPN qxMaleJPN lxFemaleJPN dxFemaleJPN qxFemaleJPN
+1 0    100000       137   0.00137      100000         126     0.00126
+2 1     99863        98   0.00098       99874          94     0.00094
+3 2     99765        67   0.00067       99780          65     0.00065
+4 3     99698        48   0.00048       99715          44     0.00044
+5 4     99650        39   0.00039       99671          30     0.00030
+6 5     99611        36   0.00036       99641          23     0.00023</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      x lxMaleJPN dxMaleJPN qxMaleJPN lxFemaleJPN dxFemaleJPN qxFemaleJPN
+96   95      2349       847   0.36047       10793        2696     0.24981
+97   96      1502       592   0.39431        8097        2251     0.27806
+98   97       910       391   0.43021        5846        1805     0.30870
+99   98       519       243   0.46816        4041        1381     0.34166
+100  99       276       140   0.50815        2660        1002     0.37684
+101 100       136       137   0.55019        1658         126     0.41417</code></pre>
+</div>
+</div>
+<p>Fantastic! It can be overwhelming to “memorize” the many relationships between <span class="math inline">\(l_x\)</span>, <span class="math inline">\(d_x\)</span>, and <span class="math inline">\(q_x\)</span>, but don’t worry! A lot of these relationships I mentioned can be derived by basic algebraic techniques; it’s incredible how much can be inferred from algebra still, especially in this context!</p>
+<p>To wrap up on this discussion, let’s take some time to visualize the results we got and see if there’s something that we can infer from it. Now, I am going to assume that you have familiar background in working with ggplot thanks to Professor Isken’s teachings and resources like <a href="https://intro2r.com/">intro2r</a>; if you need review though, feel free to look at the resources for reference. Let’s get into the analytics…</p>
+<p>First, I am visualizing the <span class="math inline">\(q_x\)</span> with respect to <code>USA</code> based on gender; it has been acknowledged that men tend to live shorter lives than women, but what do you think? Based on the results from our final life table, do you think this statement holds? If it does, then there should be a larger probability of death for men within each year than there should be for women. Let’s see…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> USA) <span class="sc">+</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> qxMaleUSA, <span class="at">color =</span> <span class="st">"blue"</span>)) <span class="sc">+</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> qxFemaleUSA, <span class="at">color =</span> <span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"qx for Males versus Females in USA"</span>, <span class="at">color =</span> <span class="st">"Gender"</span>) <span class="sc">+</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"x = age"</span>) <span class="sc">+</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"qx"</span>) <span class="sc">+</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Life_Insurance_Analytics_files/figure-html/USA-%20Males%20vs%20Females-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>And there it is! Now this does not truly confirm the statement by itself, but it is a convincing result that the statement could be true. Notice something else interesting? It is right at the beginning of the plot, but there actually is a higher probability of death for infants than there is for every age up to the age of 50 for men and about 65 for women; we could have even hypothesized and tested this statement as well. Let’s take a look at the <span class="math inline">\(q_x\)</span> levels for males and females in <code>JPN</code> now…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> JPN) <span class="sc">+</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> qxMaleJPN, <span class="at">color =</span> <span class="st">"blue"</span>)) <span class="sc">+</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> qxFemaleJPN, <span class="at">color =</span> <span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"qx for Males versus Females in JPN"</span>, <span class="at">color =</span> <span class="st">"Gender"</span>) <span class="sc">+</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"x = age"</span>) <span class="sc">+</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"qx"</span>) <span class="sc">+</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Life_Insurance_Analytics_files/figure-html/JPN-%20Males%20vs%20Females-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>…and yep! We can notice the trend here too that males tend to have a higher probability of death than females. There is something to pick up on here too; here, notice that the <span class="math inline">\(q_x\)</span> levels tend to be higher in <code>JPN</code> than in <code>USA</code>. I mentioned it earlier, but this could have to do with the <code>JPN</code> life table having its data collected earlier than the <code>USA</code> life table; as time passes, people are finding more ways to extend everyone’s lives, thus, biasing our comparisons to be slightly off (not quite “apples-to-apples” comparison, but still close). We will see this when we compare males from both countries too; let’s do that…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> USA, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> qxMaleUSA, <span class="at">color =</span> <span class="st">"blue"</span>)) <span class="sc">+</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> JPN, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> qxMaleJPN, <span class="at">color =</span> <span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"qx for Males: USA versus JPN"</span>, <span class="at">color =</span> <span class="st">"Country"</span>) <span class="sc">+</span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"USA"</span>, <span class="st">"JPN"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"x = age"</span>) <span class="sc">+</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"qx"</span>) <span class="sc">+</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Life_Insurance_Analytics_files/figure-html/Males-%20USA%20vs%20JPN-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Interesting! Earlier, I mentioned that <span class="math inline">\(q_x\)</span> rates tend to be higher for infants; here, we can see that being the case for Males in the US, but in Japan, the mortality rates are actually really small at this point. Another interesting point is that for a good while, the <span class="math inline">\(q_x\)</span> rates for the US tend to be higher until around the age of 80; then we see an overlap and JPN overtakes the US for having higher mortality rates. We have infered this much between males of two different countries. Now let’s see for females from <code>USA</code> and <code>JPN</code>…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> USA, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> qxFemaleUSA, <span class="at">color =</span> <span class="st">"blue"</span>)) <span class="sc">+</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> JPN, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> qxFemaleJPN, <span class="at">color =</span> <span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"qx for Females: USA versus JPN"</span>, <span class="at">color =</span> <span class="st">"Country"</span>) <span class="sc">+</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"USA"</span>, <span class="st">"JPN"</span>), <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"x = age"</span>) <span class="sc">+</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="st">"qx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Life_Insurance_Analytics_files/figure-html/Females-%20USA%20vs%20JPN-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>…and there you have it! It seems that the differences in <span class="math inline">\(q_x\)</span> between females in the US and Japan are not as different as they are for males though.</p>
+<p>And that wraps up the discussion on one topic among many other topics within life insurance! I hope that this demonstrates the power behind the functions of <code>lifecontingencies::</code> mixed with the analytics with <code>ggplot</code>!</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
