@@ -4,3 +4,4 @@ This is my R final project I did in "MIS 4470 - Practical Computing Data Analyti
 I have started to upload videos that helps explain the context of the project as well. The links to the videos are posted below:
 
 Part 1 (Financial Mathematics): https://www.youtube.com/watch?v=DUcwCLPq4Y0
+Part 2 (Fundamentals of Actuarial Mathematics): https://www.youtube.com/watch?v=Z5ewStMPYO8
